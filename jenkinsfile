@@ -1,6 +1,6 @@
 pipeline {
   agent {
-    label 'arathi-ubuntu'
+    label 'arathi-ubuntu-a'
   }
   environment {
     APP_NAME = "flask-counter"
