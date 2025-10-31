@@ -4,6 +4,7 @@ pipeline {
   }
   environment {
     APP_NAME = "flask-counter"
+    TARGET_URL = "http://13.219.101.110"
   }
   stages {
     stage('Build Docker Image') {
@@ -36,14 +37,14 @@ pipeline {
       steps {
         sh '''
           echo "Prometheus Targets:"
-          curl -s http://13.219.101.110:8006/api/v1/targets | jq '.data.activeTargets'
+          curl -s ${TARGET_URL}:8006/api/v1/targets | jq '.data.activeTargets'
         '''
       }
     }
     stage('Health Check') {
       steps {
         script {
-          def resp = sh(script: "curl -s -o /dev/null -w '%{http_code}' http://13.219.101.110:8010", returnStdout: true).trim()
+          def resp = sh(script: "curl -s -o /dev/null -w '%{http_code}' ${TARGET_URL}:8010", returnStdout: true).trim()
           if (resp != '200') {
             error "Application failed health check!"
           } else {
